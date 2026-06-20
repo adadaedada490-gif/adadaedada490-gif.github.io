@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Index of /</title>
+
+<style>
+body {
+    font-family: monospace;
+    background: #fff;
+    color: #000;
+}
+
+h1 {
+    font-size: 20px;
+}
+
+a {
+    color: #0000EE;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.table {
+    white-space: pre;
+}
+</style>
+</head>
+<body>
+
+<h1>Index of /</h1>
+<div id="list">loading...</div>
+
+<script>
+const repoOwner = "USERNAME";
+const repoName = "REPO";
+const path = ""; // например: "iso/2026.06.01"
+
+const api = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${path}`;
+
+fetch(api)
+.then(r => r.json())
+.then(data => {
+    let html = "";
+
+    html += `<div>../</div><br>`;
+
+    data.forEach(item => {
+        const name = item.name;
+        const url = item.html_url || item.download_url;
+
+        if (item.type === "dir") {
+            html += `<div>📁 <a href="${name}/">${name}/</a></div>`;
+        } else {
+            html += `<div>📄 <a href="${item.download_url}">${name}</a></div>`;
+        }
+    });
+
+    document.getElementById("list").innerHTML = html;
+})
+.catch(err => {
+    document.getElementById("list").innerHTML = "error loading directory";
+});
+</script>
+
+</body>
+</html>
